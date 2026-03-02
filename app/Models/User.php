@@ -22,7 +22,15 @@ class User extends Authenticatable
         'no_hp',
         'no_anggota',
         'status_aktif',
+        'foto_profil',
     ];
+
+    protected $appends = ['foto_profil_url'];
+
+    public function getFotoProfilUrlAttribute()
+    {
+        return $this->foto_profil ? asset('storage/' . $this->foto_profil) : null;
+    }
 
     protected $hidden = [
         'password',

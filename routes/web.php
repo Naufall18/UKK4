@@ -10,9 +10,9 @@ use App\Http\Controllers\Siswa\PinjamController;
 use App\Http\Controllers\Siswa\RiwayatController;
 use Illuminate\Support\Facades\Route;
 
-// Redirect root to login
+// Welcome / Landing Page
 Route::get('/', function () {
-    return redirect('/login');
+    return view('welcome');
 });
 
 // Auth Routes (Guest only for login/register)
@@ -24,6 +24,13 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+Route::get('/home', function () {
+    if (auth()->user()->role == 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+    return redirect()->route('siswa.dashboard');
+})->middleware('auth');
 
 // Admin Routes
 Route::prefix('admin')->middleware(['auth', 'isAdmin'])->name('admin.')->group(function () {
@@ -40,4 +47,5 @@ Route::prefix('siswa')->middleware(['auth', 'isSiswa'])->name('siswa.')->group(f
     Route::get('/pinjam', [PinjamController::class, 'index'])->name('pinjam.index');
     Route::post('/pinjam', [PinjamController::class, 'store'])->name('pinjam.store');
     Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
+    Route::post('/riwayat/{id}/kembalikan', [RiwayatController::class, 'kembalikan'])->name('riwayat.kembalikan');
 });

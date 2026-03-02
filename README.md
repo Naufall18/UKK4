@@ -1,157 +1,46 @@
-# 📚 Perpustakaan Sekolah Digital
+# Perpustakaan Digital (Flutter + Laravel) 📚
 
-Aplikasi **Sistem Informasi Perpustakaan Sekolah Digital** berbasis web yang dibangun menggunakan **Laravel 10**, **Bootstrap 5 CDN**, dan **MySQL**.
+Proyek Perpustakaan Digital ini dikembangkan untuk keperluan Uji Kompetensi Keahlian (UKK). Sistem ini memadukan **Backend API berbasis Laravel** dan **Aplikasi Mobile (Frontend) berbasis Flutter**.
 
----
+Terbagi menjadi dua peran/hak akses utama: **Admin** dan **Siswa (Anggota)**.
 
-## ✨ Fitur Utama
+## Fitur Utama 🔥
 
-| Fitur | Admin | Siswa |
-|-------|:-----:|:-----:|
-| Dashboard Statistik | ✅ | ✅ |
-| CRUD Buku | ✅ | ❌ |
-| CRUD Anggota | ✅ | ❌ |
-| Peminjaman Buku | ❌ | ✅ |
-| Pengembalian Buku | ✅ | ❌ |
-| Riwayat Peminjaman | ✅ | ✅ |
-| Perhitungan Denda Otomatis | ✅ | ✅ |
-| Pencarian & Pagination | ✅ | ✅ |
+### 1. Sistem Autentikasi & Registrasi Admin Dinamis 🔒
+- **Registrasi Siswa**: Secara *default*, semua pengguna yang mendaftar akan diklasifikasikan sebagai **Siswa** (harus mengisi formulir NIS dan Kelas).
+- **Registrasi Admin (Secret Code)**: Untuk mencegah sembarang orang mendaftar sebagai Admin, kami menyematkan field **"Kode Admin (Opsional)"**. 
+  - Jika form ini *dikosongkan*, akun akan menjadi akun **Siswa**.
+  - Jika form ini *diisi* dengan Kode Rahasia (misal: `UKK2026ADMIN`), sistem backend secara otomatis akan mengangkat akun tersebut menjadi **Admin**. (Kode dapat dikonfigurasi pada environment file `.env` Laravel Anda: `ADMIN_SECRET_CODE=UKK2026ADMIN`).
+- **Verifikasi OTP**: Saat mencoba mengganti password di Profil, sistem diwajibkan mengirimkan **6-digit kode OTP** melalui Email (berfungsi via SMTP Mailtrap / integrasi log untuk lingkungan *local*).
 
----
+### 2. Multi-Role Dashboard 📊
+- **Dashboard Admin**:
+  - Tampilan statistik kartu interaktif (Total Buku, Total Siswa, Peminjaman Berlansung).
+  - Manajemen `Buku` (Tambah Foto, Judul, Kategori, **Deskripsi**, dan Edit Data secara Real-Time).
+  - Manajemen `Anggota` (Melihat status keaktifan dan memperbesar/zoom foto profil resmi dari siswa).
+  - Manajemen `Transaksi` dengan "Bottom Sheet Modal" yang elegan. Jika buku dikembalikan, dapat menekan **Tandai Selesai**.
+- **Dashboard Siswa**:
+  - Rekomendasi Buku & Peminjaman Buku Otomatis.
+  - Kartu notifikasi Peminjaman Aktif. Jika buku melewati **Batas Kembali**, otomatis memunculkan teks peringatan denda dan **"Terlambat!"** berwarna merah.
+  - Detail Riwayat Transaksi. Menampilkan tanggal dikembalikan secara akurat `tanggal_kembali_aktual` dibandingkan tenggat waktu yang seharusnya.
 
-## 🛠 Tech Stack
+### 3. User Interface (UI) Modern & Mode Gelap (Dark Mode) 🌗
+- Dibangun dengan komponen material modern (*Glassmorphism*, bayangan/shadow halus).
+- **Dark Mode**: Siswa dan Admin memiliki pengaturan tema di halaman Profil. Pengguna dapat memilih antara **Sistem (Otomatis menyesuaikan mode HP)**, **Cerah**, atau **Gelap**. Merubah seluruh tema warna aplikasi menjadi aksen `Slate/Indigo` yang memanjakan mata!
+- **Notifikasi Global Seragam**: `Snackbar` modern yang seragam digunakan untuk peringatan sistem (Error, Sukses, Validasi Data).
 
-- **Backend:** Laravel 10 (PHP 8.1+)
-- **Database:** MySQL 8.0
-- **Frontend:** Blade Template + Bootstrap 5 CDN + Bootstrap Icons
-- **Server Lokal:** Laragon
+## Panduan Instalasi & Pengujian
 
----
+### Backend (Laravel)
+1. **Pindah ke Direktori**: `cd c:\laragon\www\paket44`
+2. **Environment**: Pastikan file `.env` sudah ada. Untuk mencoba OTP di perangkat lokal tanpa koneksi SMTP Mailtrap, `MAIL_MAILER` diatur menjadi `log` (OTP muncul di `storage/logs/laravel.log`).
+3. **Migrate Database**: `php artisan migrate:fresh --seed`
+4. **Jalankan Server API**: `php artisan serve --host=0.0.0.0 --port=8000`
 
-## 🚀 Instalasi & Setup
-
-### 1. Clone / Copy Project
-Salin folder project ke `C:\laragon\www\paket44\`
-
-### 2. Install Dependencies
-```bash
-cd C:\laragon\www\paket44
-composer install
-```
-
-### 3. Konfigurasi Environment
-```bash
-cp .env.example .env
-php artisan key:generate
-```
-
-Edit `.env`:
-```env
-DB_DATABASE=perpustakaan
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-### 4. Buat Database & Migrasi
-```bash
-# Buat database 'perpustakaan' di phpMyAdmin
-php artisan migrate:fresh --seed
-```
-
-### 5. Jalankan
-```bash
-php artisan serve
-```
-Buka: **http://localhost:8000** atau **http://paket44.test** (via Laragon)
+### Frontend (Flutter)
+1. **Pindah ke Direktori**: `cd c:\laragon\www\paket44\mobile_paket44`
+2. **Ubah Target API**: Edit `lib/data/services/api_service.dart` dan sesuaikan IP dengan komputer Anda (misal `http://192.168.x.x:8000/api`).
+3. **Jalankan Aplikasi Mobile**: `flutter run` 
 
 ---
-
-## 🔑 Akun Login
-
-| Role | Username | Password |
-|------|----------|----------|
-| **Admin** | `admin` | `admin123` |
-| **Siswa** | `ahmad` | `siswa123` |
-| **Siswa** | `siti` | `siswa123` |
-
----
-
-## 📁 Struktur Project
-
-```
-paket44/
-├── app/
-│   ├── Http/Controllers/
-│   │   ├── AuthController.php          # Login, Register, Logout
-│   │   ├── Admin/
-│   │   │   ├── DashboardController.php # Dashboard + statistik
-│   │   │   ├── BukuController.php      # CRUD buku
-│   │   │   ├── AnggotaController.php   # CRUD anggota/siswa
-│   │   │   └── TransaksiController.php # Kelola peminjaman
-│   │   └── Siswa/
-│   │       ├── DashboardController.php # Dashboard siswa
-│   │       ├── PinjamController.php    # Pinjam buku baru
-│   │       └── RiwayatController.php   # Riwayat peminjaman
-│   ├── Http/Middleware/
-│   │   ├── IsAdmin.php                 # Middleware cek role admin
-│   │   └── IsSiswa.php                 # Middleware cek role siswa
-│   └── Models/
-│       ├── User.php                    # Model user (admin/siswa)
-│       ├── Buku.php                    # Model buku perpustakaan
-│       └── Peminjaman.php             # Model transaksi peminjaman
-├── database/
-│   ├── migrations/                     # 3 migration files
-│   └── seeders/DatabaseSeeder.php     # Data dummy (admin, 2 siswa, 5 buku)
-├── resources/views/
-│   ├── layouts/                        # Layout sidebar + auth card
-│   ├── auth/                           # Login & register
-│   ├── admin/                          # 6 view admin
-│   └── siswa/                          # 3 view siswa
-└── routes/web.php                      # Semua routing
-```
-
----
-
-## 📖 Dokumentasi Lengkap
-
-Dokumentasi lengkap dengan **seluruh source code** tersedia di 4 file berikut:
-
-1. **[DOKUMENTASI.md](DOKUMENTASI.md)** — BAB 1-5: Pendahuluan, Setup, Database, Model, Middleware & Auth
-2. **[DOKUMENTASI_PART2.md](DOKUMENTASI_PART2.md)** — BAB 6-8: Semua Controller, Routing, Konfigurasi
-3. **[DOKUMENTASI_PART3.md](DOKUMENTASI_PART3.md)** — BAB 9-10: Layout (Sidebar + Auth Card), Halaman Login & Register
-4. **[DOKUMENTASI_PART4.md](DOKUMENTASI_PART4.md)** — BAB 11-13: Halaman Admin, Halaman Siswa, Cara Menjalankan
-5. **[DOKUMENTASI_PART5.md](DOKUMENTASI_PART5.md)** — Panduan Terminal: Step-by-step dari nol (untuk pemula)
-
----
-
-## 📊 Diagram Relasi Database (ERD)
-
-```
-┌──────────────┐       ┌──────────────┐       ┌──────────────┐
-│    users     │       │  peminjamen  │       │    bukus     │
-├──────────────┤       ├──────────────┤       ├──────────────┤
-│ id (PK)      │──1:N──│ user_id (FK) │       │ id (PK)      │
-│ name         │       │ buku_id (FK) │──N:1──│ judul        │
-│ username     │       │ tgl_pinjam   │       │ pengarang    │
-│ email        │       │ tgl_kembali  │       │ penerbit     │
-│ role (enum)  │       │ status       │       │ tahun        │
-│ nis          │       │ denda        │       │ kategori     │
-│ kelas        │       └──────────────┘       │ stok         │
-│ no_anggota   │                              └──────────────┘
-└──────────────┘
-```
-
----
-
-## ⚙️ Fitur Teknis
-
-- **Auto-generate No. Anggota** — Format: `SIS-001`, `SIS-002`, dst.
-- **Batas Peminjaman** — 7 hari sejak tanggal pinjam
-- **Denda Otomatis** — Rp 1.000 per hari keterlambatan
-- **Stok Otomatis** — Berkurang saat dipinjam, bertambah saat dikembalikan
-- **Pencegahan Duplikat** — Siswa tidak bisa pinjam buku yang sama sebelum dikembalikan
-- **Bootstrap 5 Pagination** — Konfigurasi di `AppServiceProvider`
-
----
-
-*Dibuat dengan ❤️ menggunakan Laravel 10 + Bootstrap 5*
+*Proyek ini dirancang agar solid saat presentasi UKK dengan penanganan edge-case (error handling Form/API) dan antarmuka premium.*

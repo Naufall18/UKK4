@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Buku;
@@ -22,14 +22,39 @@ class BukuController extends Controller
             });
         }
 
-        $bukus = $query->orderBy('judul')->paginate(10);
+        $bukus = $query->orderBy('judul')->get();
 
-        return view('admin.buku.index', compact('bukus'));
+        // Add full URL to cover image
+        $bukus->transform(function ($buku) {
+            $buku->cover_url = $buku->cover ? asset('storage/' . $buku->cover) : null;
+            return $buku;
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar buku berhasil diambil',
+            'data' => $bukus
+        ], 200);
     }
 
-    public function create()
+    public function show($id)
     {
-        return view('admin.buku.create');
+        $buku = Buku::find($id);
+
+        if (!$buku) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Buku tidak ditemukan'
+            ], 404);
+        }
+
+        $buku->cover_url = $buku->cover ? asset('storage/' . $buku->cover) : null;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail buku berhasil diambil',
+            'data' => $buku
+        ], 200);
     }
 
     public function store(Request $request)
@@ -50,19 +75,24 @@ class BukuController extends Controller
             $data['cover'] = $request->file('cover')->store('covers', 'public');
         }
 
-        Buku::create($data);
+        $buku = Buku::create($data);
+        $buku->cover_url = $buku->cover ? asset('storage/' . $buku->cover) : null;
 
-        return redirect()->route('admin.buku.index')
-            ->with('success', 'Buku berhasil ditambahkan.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Buku berhasil ditambahkan.',
+            'data' => $buku
+        ], 201);
     }
 
-    public function edit(Buku $buku)
+    public function update(Request $request, $id)
     {
-        return view('admin.buku.edit', compact('buku'));
-    }
+        $buku = Buku::find($id);
 
-    public function update(Request $request, Buku $buku)
-    {
+        if (!$buku) {
+            return response()->json(['success' => false, 'message' => 'Buku tidak ditemukan'], 404);
+        }
+
         $request->validate([
             'judul' => 'required|string|max:255',
             'pengarang' => 'required|string|max:255',
@@ -73,10 +103,9 @@ class BukuController extends Controller
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        $data = $request->except('cover');
+        $data = $request->except(['cover', '_method']);
 
         if ($request->hasFile('cover')) {
-            // Delete old cover
             if ($buku->cover) {
                 Storage::disk('public')->delete($buku->cover);
             }
@@ -84,19 +113,32 @@ class BukuController extends Controller
         }
 
         $buku->update($data);
+        $buku->cover_url = $buku->cover ? asset('storage/' . $buku->cover) : null;
 
-        return redirect()->route('admin.buku.index')
-            ->with('success', 'Buku berhasil diperbarui.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Buku berhasil diperbarui.',
+            'data' => $buku
+        ], 200);
     }
 
-    public function destroy(Buku $buku)
+    public function destroy($id)
     {
+        $buku = Buku::find($id);
+
+        if (!$buku) {
+            return response()->json(['success' => false, 'message' => 'Buku tidak ditemukan'], 404);
+        }
+
         if ($buku->cover) {
             Storage::disk('public')->delete($buku->cover);
         }
+
         $buku->delete();
 
-        return redirect()->route('admin.buku.index')
-            ->with('success', 'Buku berhasil dihapus.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Buku berhasil dihapus.'
+        ], 200);
     }
 }

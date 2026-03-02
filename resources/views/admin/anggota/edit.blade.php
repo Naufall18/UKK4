@@ -3,7 +3,7 @@
 @section('page-title', 'Edit Anggota')
 
 @section('content')
-    <div class="card card-custom" style="max-width: 640px;">
+    <div class="card card-custom" style="max-width: 680px;">
         <div class="card-header">
             <i class="bi bi-pencil-square me-2"></i>Form Edit Anggota
         </div>
@@ -58,11 +58,12 @@
                 <div class="mb-3">
                     <label for="password" class="form-label">Password Baru <small class="text-muted">(kosongkan jika tidak
                             diubah)</small></label>
-                    <input type="password" class="form-control" id="password" name="password">
+                    <input type="password" class="form-control" id="password" name="password"
+                        placeholder="Masukkan password baru">
                 </div>
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 pt-2">
                     <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Update</button>
-                    <a href="{{ route('admin.anggota.index') }}" class="btn btn-secondary">Batal</a>
+                    <a href="{{ route('admin.anggota.index') }}" class="btn btn-light">Batal</a>
                 </div>
             </form>
         </div>
