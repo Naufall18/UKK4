@@ -26,7 +26,17 @@ class BukuController extends Controller
 
         // Add full URL to cover image
         $bukus->transform(function ($buku) {
-            $buku->cover_url = $buku->cover ? asset('storage/' . $buku->cover) : null;
+            if ($buku->cover) {
+                if (str_starts_with($buku->cover, 'http')) {
+                    $buku->cover_url = $buku->cover;
+                } else if (str_starts_with($buku->cover, 'assets/')) {
+                    $buku->cover_url = $buku->cover;
+                } else {
+                    $buku->cover_url = asset('storage/' . $buku->cover);
+                }
+            } else {
+                $buku->cover_url = null;
+            }
             return $buku;
         });
 
@@ -48,7 +58,17 @@ class BukuController extends Controller
             ], 404);
         }
 
-        $buku->cover_url = $buku->cover ? asset('storage/' . $buku->cover) : null;
+        if ($buku->cover) {
+            if (str_starts_with($buku->cover, 'http')) {
+                $buku->cover_url = $buku->cover;
+            } else if (str_starts_with($buku->cover, 'assets/')) {
+                $buku->cover_url = $buku->cover;
+            } else {
+                $buku->cover_url = asset('storage/' . $buku->cover);
+            }
+        } else {
+            $buku->cover_url = null;
+        }
 
         return response()->json([
             'success' => true,
@@ -66,6 +86,7 @@ class BukuController extends Controller
             'tahun' => 'required|string|max:4',
             'kategori' => 'required|string|max:100',
             'stok' => 'required|integer|min:0',
+            'lokasi_rak' => 'nullable|string|max:255',
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
@@ -76,7 +97,17 @@ class BukuController extends Controller
         }
 
         $buku = Buku::create($data);
-        $buku->cover_url = $buku->cover ? asset('storage/' . $buku->cover) : null;
+        if ($buku->cover) {
+            if (str_starts_with($buku->cover, 'http')) {
+                $buku->cover_url = $buku->cover;
+            } else if (str_starts_with($buku->cover, 'assets/')) {
+                $buku->cover_url = $buku->cover;
+            } else {
+                $buku->cover_url = asset('storage/' . $buku->cover);
+            }
+        } else {
+            $buku->cover_url = null;
+        }
 
         return response()->json([
             'success' => true,
@@ -100,6 +131,7 @@ class BukuController extends Controller
             'tahun' => 'required|string|max:4',
             'kategori' => 'required|string|max:100',
             'stok' => 'required|integer|min:0',
+            'lokasi_rak' => 'nullable|string|max:255',
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
@@ -113,7 +145,17 @@ class BukuController extends Controller
         }
 
         $buku->update($data);
-        $buku->cover_url = $buku->cover ? asset('storage/' . $buku->cover) : null;
+        if ($buku->cover) {
+            if (str_starts_with($buku->cover, 'http')) {
+                $buku->cover_url = $buku->cover;
+            } else if (str_starts_with($buku->cover, 'assets/')) {
+                $buku->cover_url = $buku->cover;
+            } else {
+                $buku->cover_url = asset('storage/' . $buku->cover);
+            }
+        } else {
+            $buku->cover_url = null;
+        }
 
         return response()->json([
             'success' => true,

@@ -1,0 +1,7 @@
+﻿  error - Invalid constant value - lib\presentation\siswa\dashboard\views\widgets\components\cart_sheet.dart:206:28 - invalid_constant
+  error - Target of URI doesn't exist: 'package:paket44/presentation/shared/widgets/stat_card.dart' - lib\presentation\siswa\dashboard\views\widgets\dashboard_widget.dart:4:8 - uri_does_not_exist
+  error - Invalid constant value - lib\presentation\siswa\dashboard\views\widgets\dashboard_widget.dart:34:24 - invalid_constant
+  error - Invalid constant value - lib\presentation\siswa\dashboard\views\widgets\dashboard_widget.dart:45:24 - invalid_constant
+  error - Invalid constant value - lib\presentation\siswa\dashboard\views\widgets\dashboard_widget.dart:56:24 - invalid_constant
+  error - The method 'StatCard' isn't defined for the type 'DashboardWidget' - lib\presentation\siswa\dashboard\views\widgets\dashboard_widget.dart:147:20 - undefined_method
+  error - The method 'StatCard' isn't defined for the type 'DashboardWidget' - lib\presentation\siswa\dashboard\views\widgets\dashboard_widget.dart:156:20 - undefined_method

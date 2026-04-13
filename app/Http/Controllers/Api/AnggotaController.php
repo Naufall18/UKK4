@@ -12,11 +12,19 @@ class AnggotaController extends Controller
 {
     public function index(Request $request)
     {
-        if (!Auth::user()->isAdmin()) {
+        if (!Auth::user() || !Auth::user()->isAdmin()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
         $query = User::where('role', 'siswa');
+
+        if ($request->has('kelas') && $request->kelas != '') {
+            $query->where('kelas', $request->kelas);
+        }
+
+        if ($request->has('jurusan') && $request->jurusan != '') {
+            $query->where('kelas', 'like', "%{$request->jurusan}%");
+        }
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
@@ -29,6 +37,8 @@ class AnggotaController extends Controller
         }
 
         $anggotas = $query->orderBy('name')->get();
+        // Membuka password agar bisa dilihat admin sesuai permintaan
+        $anggotas->makeVisible('password');
 
         return response()->json([
             'success' => true,
@@ -39,7 +49,7 @@ class AnggotaController extends Controller
 
     public function store(Request $request)
     {
-        if (!Auth::user()->isAdmin()) {
+        if (!Auth::user() || !Auth::user()->isAdmin()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -81,7 +91,7 @@ class AnggotaController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (!Auth::user()->isAdmin()) {
+        if (!Auth::user() || !Auth::user()->isAdmin()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -99,6 +109,10 @@ class AnggotaController extends Controller
 
         $data = $request->only(['name', 'username', 'email', 'nis', 'kelas', 'no_hp', 'status_aktif']);
 
+        if ($request->has('status_aktif') && (bool) $request->status_aktif === true) {
+            $data['support_request'] = null;
+        }
+
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
@@ -114,7 +128,7 @@ class AnggotaController extends Controller
 
     public function destroy($id)
     {
-        if (!Auth::user()->isAdmin()) {
+        if (!Auth::user() || !Auth::user()->isAdmin()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -124,6 +138,29 @@ class AnggotaController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Anggota berhasil dihapus',
+        ], 200);
+    }
+
+    public function toggleStatus($id)
+    {
+        if (!Auth::user() || !Auth::user()->isAdmin()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $anggota = User::where('role', 'siswa')->findOrFail($id);
+        $anggota->status_aktif = !$anggota->status_aktif;
+
+        // Jika diaktifkan, hapus support request
+        if ($anggota->status_aktif) {
+            $anggota->support_request = null;
+        }
+
+        $anggota->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status anggota berhasil diubah',
+            'data' => $anggota
         ], 200);
     }
 }

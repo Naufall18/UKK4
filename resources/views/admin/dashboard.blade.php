@@ -94,8 +94,8 @@
                                     </div>
                                 </td>
                                 <td><strong>{{ $p->buku->judul }}</strong></td>
-                                <td>{{ $p->tgl_pinjam->format('d/m/Y') }}</td>
-                                <td>{{ $p->tgl_kembali_rencana->format('d/m/Y') }}</td>
+                                <td>{{ $p->tgl_pinjam ? $p->tgl_pinjam->format('d/m/Y') : '-' }}</td>
+                                <td>{{ $p->tgl_kembali_rencana ? $p->tgl_kembali_rencana->format('d/m/Y') : '-' }}</td>
                                 <td>
                                     <span class="badge badge-{{ $p->status }}">
                                         {{ ucfirst($p->status) }}

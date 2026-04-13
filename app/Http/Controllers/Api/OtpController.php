@@ -22,8 +22,18 @@ class OtpController extends Controller
         Cache::put('otp_' . $request->no_hp, $otp, now()->addMinutes(5));
 
         try {
-            // For now we log it, or you could add Fonnte / WhatsApp gateway here
             \Log::info("MENGIRIM OTP KE {$request->no_hp}: {$otp}");
+
+            // Ambil token dari config (bukan env langsung, agar tetap work saat config cached)
+            $fonnteToken = config('services.fonnte.token');
+
+            if (empty($fonnteToken)) {
+                \Log::error('FONNTE_TOKEN tidak ditemukan di config. Pastikan FONNTE_TOKEN ada di .env dan jalankan php artisan config:clear');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Konfigurasi OTP belum lengkap. Hubungi admin.'
+                ], 500);
+            }
 
             // Integrasi API Fonnte
             $curl = curl_init();
@@ -32,24 +42,31 @@ class OtpController extends Controller
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_CONNECTTIMEOUT => 10,
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => false,
                 CURLOPT_POSTFIELDS => array(
                     'target' => $request->no_hp,
                     'message' => "Kode OTP Anda: $otp. Jangan berikan kode ini ke siapapun."
                 ),
                 CURLOPT_HTTPHEADER => array(
-                    'Authorization: ' . env('FONNTE_TOKEN')
+                    'Authorization: ' . $fonnteToken
                 ),
             ));
 
             $response = curl_exec($curl);
             $err = curl_error($curl);
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             curl_close($curl);
 
+            \Log::info("Fonnte API Response [HTTP {$httpCode}]: " . $response);
+
             if ($err) {
+                \Log::error("Fonnte cURL Error: " . $err);
                 return response()->json([
                     'success' => false,
                     'message' => 'Gagal mengirim OTP (cURL Error): ' . $err

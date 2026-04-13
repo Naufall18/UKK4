@@ -14,13 +14,17 @@ class DashboardController extends Controller
 {
     public function adminStats()
     {
-        if (!Auth::user()->isAdmin()) {
+        $user = Auth::user();
+        if (!$user || !$user->isAdmin()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
         $totalBuku = Buku::count();
         $totalAnggota = User::where('role', 'siswa')->count();
         $peminjamanAktif = Peminjaman::where('status', 'dipinjam')->count();
+        $bukuTerlambat = Peminjaman::where('status', 'dipinjam')
+            ->where('tgl_kembali_rencana', '<', Carbon::today())
+            ->count();
         $pengembalianHariIni = Peminjaman::where('status', 'dikembalikan')
             ->whereDate('tgl_kembali_aktual', Carbon::today())
             ->count();
@@ -31,6 +35,7 @@ class DashboardController extends Controller
                 'total_buku' => $totalBuku,
                 'total_anggota' => $totalAnggota,
                 'peminjaman_aktif' => $peminjamanAktif,
+                'buku_terlambat' => $bukuTerlambat,
                 'pengembalian_hari_ini' => $pengembalianHariIni
             ]
         ], 200);

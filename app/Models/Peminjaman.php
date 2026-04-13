@@ -12,13 +12,21 @@ class Peminjaman extends Model
     protected $table = 'peminjamen';
 
     protected $fillable = [
+        'kode_transaksi',
         'user_id',
         'buku_id',
+        'jumlah',
+        'durasi_hari',
         'tgl_pinjam',
         'tgl_kembali_rencana',
         'tgl_kembali_aktual',
         'status',
+        'status_approval',
         'denda',
+        'kondisi_buku',
+        'catatan_kondisi',
+        'denda_kerusakan',
+        'status_bayar_denda',
     ];
 
     protected $casts = [

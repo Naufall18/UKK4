@@ -18,6 +18,7 @@ class Buku extends Model
         'deskripsi',
         'stok',
         'cover',
+        'lokasi_rak',
     ];
 
     public function peminjaman()

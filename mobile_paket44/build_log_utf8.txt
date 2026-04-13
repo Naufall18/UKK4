@@ -1,0 +1,145 @@
+﻿Running Gradle task 'assembleDebug'...                          
+flutter : lib/presen
+tation/admin/dashboa
+rd/views/admin_dashb
+oard_view.dart:9:8: 
+Error: Error when 
+reading 'lib/widgets
+/profile_widget.dart
+': The system 
+cannot find the 
+path specified.
+At line:1 char:1
++ flutter build apk 
+--debug > 
+build_log.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~
+    + CategoryInfo  
+            : NotS  
+  pecified: (lib/   
+ presentatio...p    
+ath specified.:    
+String) [], Rem    
+oteException
+    + FullyQualifie 
+   dErrorId : Nati  
+  veCommandError
+ 
+
+import '../../../../
+widgets/profile_widg
+et.dart';
+       ^
+lib/presentation/sis
+wa/dashboard/views/s
+tudent_dashboard_vie
+w.dart:8:8: Error: 
+Error when reading '
+lib/widgets/profile_
+widget.dart': The 
+system cannot find 
+the path specified.
+
+import '../../../../
+widgets/profile_widg
+et.dart';
+       ^
+lib/presentation/adm
+in/dashboard/views/a
+dmin_dashboard_view.
+dart:67:26: Error: 
+Not a constant 
+expression.
+            return 
+const 
+ProfileWidget();
+                    
+     ^^^^^^^^^^^^^
+lib/presentation/sis
+wa/dashboard/views/s
+tudent_dashboard_vie
+w.dart:64:26: 
+Error: Not a 
+constant expression.
+            return 
+const 
+ProfileWidget();
+                    
+     ^^^^^^^^^^^^^
+lib/presentation/sis
+wa/dashboard/views/w
+idgets/history_widge
+t.dart:55:43: 
+Error: Can't find 
+')' to match '('.
+                    
+return 
+GestureDetector(
+                    
+                    
+  ^
+lib/presentation/sis
+wa/dashboard/views/w
+idgets/history_widge
+t.dart:199:38: 
+Error: Cannot 
+invoke a 
+non-'const' 
+constructor where a 
+const expression is 
+expected.
+Try using a 
+constructor or 
+factory that is 
+'const'.
+          
+borderRadius: Border
+Radius.circular(24),
+                    
+                 
+^^^^^^^^
+Target kernel_snapsh
+ot_program failed: 
+Exception
+
+
+FAILURE: Build 
+failed with an 
+exception.
+
+* What went wrong:
+Execution failed 
+for task ':app:compi
+leFlutterBuildDebug'
+.
+> Process 'command '
+C:\flutter_sdk\flutt
+er\bin\flutter.bat''
+ finished with 
+non-zero exit value 
+1
+
+* Try:
+> Run with 
+--stacktrace option 
+to get the stack 
+trace.
+> Run with --info 
+or --debug option 
+to get more log 
+output.
+> Run with --scan 
+to get full 
+insights.
+> Get more help at h
+ttps://help.gradle.o
+rg.
+
+BUILD FAILED in 6s
+Running Gradle task 'assembleDebug'...                              6.4s
+Gradle task 
+assembleDebug 
+failed with exit 
+code 1

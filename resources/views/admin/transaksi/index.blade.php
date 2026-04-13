@@ -65,8 +65,8 @@
                                     </div>
                                 </td>
                                 <td><strong>{{ $t->buku->judul }}</strong></td>
-                                <td>{{ $t->tgl_pinjam->format('d/m/Y') }}</td>
-                                <td>{{ $t->tgl_kembali_rencana->format('d/m/Y') }}</td>
+                                <td>{{ $t->tgl_pinjam ? $t->tgl_pinjam->format('d/m/Y') : '-' }}</td>
+                                <td>{{ $t->tgl_kembali_rencana ? $t->tgl_kembali_rencana->format('d/m/Y') : '-' }}</td>
                                 <td>{{ $t->tgl_kembali_aktual ? $t->tgl_kembali_aktual->format('d/m/Y') : '-' }}</td>
                                 <td>
                                     <span class="badge badge-{{ $t->status }}">

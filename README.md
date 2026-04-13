@@ -8,6 +8,7 @@ Terbagi menjadi dua peran/hak akses utama: **Admin** dan **Siswa (Anggota)**.
 
 ### 1. Sistem Autentikasi & Registrasi Admin Dinamis 🔒
 - **Registrasi Siswa**: Secara *default*, semua pengguna yang mendaftar akan diklasifikasikan sebagai **Siswa** (harus mengisi formulir NIS dan Kelas).
+- **Cetak PDF Transaksi (Admin)**: Pada halaman transaksi admin terdapat ikon PDF di pojok kanan atas. Pilih untuk mencetak seluruh transaksi atau berdasarkan NIS siswa, kemudian hasil akan dibagikan/simpan sebagai file PDF.
 - **Registrasi Admin (Secret Code)**: Untuk mencegah sembarang orang mendaftar sebagai Admin, kami menyematkan field **"Kode Admin (Opsional)"**. 
   - Jika form ini *dikosongkan*, akun akan menjadi akun **Siswa**.
   - Jika form ini *diisi* dengan Kode Rahasia (misal: `UKK2026ADMIN`), sistem backend secara otomatis akan mengangkat akun tersebut menjadi **Admin**. (Kode dapat dikonfigurasi pada environment file `.env` Laravel Anda: `ADMIN_SECRET_CODE=UKK2026ADMIN`).
