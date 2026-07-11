@@ -1,38 +1,78 @@
 <div align="center">
-  <h1>📚 e-Library API (Backend)</h1>
-  <p><strong>RESTful API for Digital Library System - UKK Project</strong></p>
-  
-  <p>
-    <img src="https://img.shields.io/badge/Laravel-%23FF2D20.svg?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel" />
-    <img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP" />
-    <img src="https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
-  </p>
+
+# 📚 Perpustakaan Digital — Backend API
+
+**REST API untuk sistem perpustakaan sekolah — autentikasi, katalog buku, peminjaman, dan denda. Dibangun dengan Laravel 10 + Sanctum.**
+
+![Laravel](https://img.shields.io/badge/Laravel%2010-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP%208.1-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![Sanctum](https://img.shields.io/badge/Sanctum-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+
 </div>
 
 ---
 
-## 📖 Deskripsi
-Ini adalah repository **Backend (REST API)** untuk sistem Perpustakaan Digital, dibangun secara khusus untuk memenuhi standar proyek Uji Kompetensi Keahlian (UKK). 
+## 📖 Tentang
 
-Sistem ini berfungsi sebagai inti pemrosesan data (Server-Side) yang melayani request dari aplikasi mobile (Frontend) dengan respon JSON yang cepat, aman, dan terstruktur.
+REST API untuk **Perpustakaan Digital** sekolah, menyajikan data ke [aplikasi mobile Flutter](https://github.com/Naufall18/Perpustakaan-Digital_Mobile). Menangani autentikasi berbasis token (**Sanctum**) dengan verifikasi **OTP**, katalog buku, engine peminjaman (approve → pickup → kembalikan), perhitungan **denda** keterlambatan, dan akses berbasis peran (**Admin** & **Siswa**).
 
-## ✨ Fitur Utama
-- **🔐 Secure Authentication:** Dilengkapi dengan sistem autentikasi Token-based (API Tokens/JWT) untuk menjaga keamanan endpoints.
-- **👥 Role Management:** Pemisahan akses endpoint yang ketat antara **Admin** (Pengelola Perpustakaan) dan **Siswa** (Anggota/Peminjam).
-- **📚 Book & Inventory API:** CRUD lengkap untuk manajemen buku, kategori, dan stok.
-- **🔄 Transaction Engine:** Logika pemrosesan peminjaman, pengembalian, persetujuan admin, perhitungan denda otomatis, dan riwayat transaksi.
-- **📊 Analytics Data:** Endpoint khusus untuk menyuplai data statistik (grafik peminjaman, buku terpopuler) ke Dashboard.
+## ✨ Fitur
 
-## 🚀 Instalasi & Menjalankan API
-1. Clone repository ini.
-2. Buka terminal dan jalankan `composer install`.
-3. Copy file `.env.example` menjadi `.env` dan atur konfigurasi database MySQL Anda.
-4. Jalankan `php artisan key:generate`.
-5. Jalankan migrasi dan seeder: `php artisan migrate:fresh --seed`.
-6. Jalankan server lokal: `php artisan serve`.
-7. API akan berjalan di `http://localhost:8000`.
+- 🔐 **Auth Sanctum** — login, register, logout, profil, dengan verifikasi **OTP** & reset password
+- 📕 **Buku** — CRUD + upload cover
+- 🎓 **Siswa** — dashboard, ajukan pinjam, konfirmasi pengambilan, kembalikan, riwayat
+- 🛠️ **Admin** — kelola transaksi (approve/reject/pickup/mark-taken/kembalikan), bayar denda
+- 👥 **Anggota** — CRUD + toggle status aktif
+- ⚙️ **Pengaturan** — konfigurasi denda & aturan perpustakaan
+- 📮 **Postman collection** + dokumentasi API disertakan
 
----
-<div align="center">
-  <i>Dikembangkan dengan ❤️ oleh Naufal untuk Proyek UKK.</i>
-</div>
+## 🔌 Ringkasan Endpoint
+
+**Publik**
+```
+POST /api/login                POST /api/register
+POST /api/send-otp             POST /api/verify-otp
+POST /api/send-reset-otp       POST /api/reset-password
+```
+
+**Terproteksi** (`auth:sanctum`)
+```
+GET  /api/me                   POST /api/profile/update
+GET  /api/buku                 POST /api/buku          (+ /{id} update, delete)
+
+# Siswa
+GET  /api/siswa/dashboard      GET  /api/siswa/riwayat
+POST /api/siswa/pinjam         POST /api/siswa/transaksi/{id}/confirm-pickup
+
+# Admin
+GET  /api/admin/dashboard      GET  /api/admin/transaksi
+POST /api/admin/transaksi/{id}/approve|reject|mark-taken|kembalikan|bayar-denda
+GET  /api/admin/anggota        POST /api/admin/anggota  (+ update, toggle-status, delete)
+GET  /api/admin/pengaturan     POST /api/admin/pengaturan
+```
+
+## 🗄️ Model
+
+`User` · `Buku` · `Peminjaman` · `Pengaturan`
+
+## 🚀 Menjalankan
+
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+# atur koneksi database di .env
+php artisan migrate --seed
+php artisan serve
+```
+
+**Butuh:** PHP 8.1+ · Composer · MySQL
+
+## 🔗 Terkait
+
+- **Mobile App:** [Perpustakaan-Digital_Mobile](https://github.com/Naufall18/Perpustakaan-Digital_Mobile) — Flutter + GetX
+
+## 📄 Lisensi
+
+MIT © [Naufal Dwi Arifianto](https://github.com/Naufall18)
